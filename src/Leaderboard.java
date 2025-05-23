@@ -10,7 +10,15 @@ import org.json.*;
 
 public class Leaderboard {
 
-    private static final String JSON_PATH = System.getProperty("user.home") + File.separator + "leaderboard.json";
+    private static final String JSON_PATH;
+
+    static {
+        File dir = new File("saves");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        JSON_PATH = "saves" + File.separator + "leaderboard.json";
+    }
 
     public static void guardarResultado(String nombre, String tiempo, String seed) {
         List<JSONObject> datos = new ArrayList<>();
@@ -24,7 +32,8 @@ public class Leaderboard {
                     datos.add(jsonArray.getJSONObject(i));
                 }
             }
-        } catch (IOException | JSONException ignored) {}
+        } catch (IOException | JSONException ignored) {
+        }
 
         // Añadir nuevo resultado
         JSONObject entrada = new JSONObject();
@@ -85,7 +94,9 @@ public class Leaderboard {
                 }
             });
 
-            VBox content = new VBox(10, new Label("🏆 Mejores partidas (haz clic en una y luego en 'Jugar este mapa'):"), listView, btnJugarSeed);
+            VBox content = new VBox(10,
+                    new Label("🏆 Mejores partidas (haz clic en una y luego en 'Jugar este mapa'):"), listView,
+                    btnJugarSeed);
             content.setPrefSize(500, 400);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
