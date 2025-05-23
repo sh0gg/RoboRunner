@@ -1,5 +1,3 @@
-package Mapa;
-
 import javafx.scene.control.*;
 
 import java.io.*;
