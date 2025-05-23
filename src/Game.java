@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -23,9 +25,17 @@ public class Game extends Application {
     private Stage primaryStage;
     private String nombreJugador;
     private long tiempoInicio;
+    private String seed;
+    private Random random;
 
     public Game(String nombreJugador) {
+        this(nombreJugador, null);
+    }
+
+    public Game(String nombreJugador, String seed) {
         this.nombreJugador = nombreJugador;
+        this.seed = seed;
+        this.random = (seed != null) ? new Random(seed.hashCode()) : new Random();
     }
 
     @Override
@@ -50,7 +60,7 @@ public class Game extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
 
-        tiempoInicio = System.currentTimeMillis(); // ⏱️ start timer
+        tiempoInicio = System.currentTimeMillis();
     }
 
     private void mover(String dir) {
@@ -64,15 +74,12 @@ public class Game extends Application {
             case "abj": nuevaY++; break;
         }
 
-        if (nuevaY >= 0 && nuevaY < filas &&
-                nuevaX >= 0 && nuevaX < columnas &&
-                mapa[nuevaY][nuevaX] != '1') {
-
+        if (nuevaY >= 0 && nuevaY < filas && nuevaX >= 0 && nuevaX < columnas && mapa[nuevaY][nuevaX] != '1') {
             if (mapa[nuevaY][nuevaX] == 'X') {
                 long tiempoFinal = System.currentTimeMillis();
                 long duracionMs = tiempoFinal - tiempoInicio;
                 String tiempoFormateado = formatearTiempo(duracionMs);
-                Leaderboard.guardarResultado(nombreJugador, tiempoFormateado);
+                Leaderboard.guardarResultado(nombreJugador, tiempoFormateado, seed);
                 mostrarAlerta("¡Victoria!", "🏅 ¡Has llegado a la meta!\nTiempo: " + tiempoFormateado);
                 return;
             } else if (mapa[nuevaY][nuevaX] == 'B') {
@@ -95,70 +102,75 @@ public class Game extends Application {
         return String.format("%02d.%03d", seg, milis);
     }
 
-
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(titulo);
-        alert.setHeaderText(mensaje);
+        alert.setHeaderText(mensaje + "\nSeed: " + (seed != null ? seed : "aleatoria"));
         alert.setContentText("¿Qué deseas hacer?");
 
         ButtonType btnMenu = new ButtonType("Menú principal");
         ButtonType btnReintentar = new ButtonType("Volver a jugar");
         ButtonType btnSalir = new ButtonType("Salir");
+        ButtonType btnCopiarSeed = new ButtonType("Copiar seed");
 
-        alert.getButtonTypes().setAll(btnReintentar, btnMenu, btnSalir);
+        alert.getButtonTypes().setAll(btnReintentar, btnMenu, btnSalir, btnCopiarSeed);
 
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent()) {
             if (result.get() == btnReintentar) {
                 try {
-                    Game nuevo = new Game(nombreJugador);
+                    Game nuevo = new Game(nombreJugador, seed);
                     nuevo.start(new Stage());
                     primaryStage.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (result.get() == btnMenu) {
-                Stage menuStage = new Stage();
-                menuStage.setTitle("Aventura del Robot - Menú");
-
-                Label label = new Label("Introduce tu nombre:");
-                TextField nombreField = new TextField();
-
-                Button btnJugar = new Button("Jugar");
-                Button btnLeaderboard = new Button("Leaderboard");
-
-                btnJugar.setOnAction(e -> {
-                    String nombre = nombreField.getText().trim();
-                    if (!nombre.isEmpty()) {
-                        Game nuevoJuego = new Game(nombre);
-                        try {
-                            nuevoJuego.start(new Stage());
-                            menuStage.close();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                });
-
-                btnLeaderboard.setOnAction(e -> {
-                    Leaderboard.mostrarLeaderboard();
-                });
-
-                VBox layout = new VBox(10, label, nombreField, btnJugar, btnLeaderboard);
-                layout.setStyle("-fx-padding: 20;");
-                menuStage.setScene(new Scene(layout, 300, 200));
-                menuStage.show();
-
-                primaryStage.close();
-
+                mostrarMenuPrincipal();
+            } else if (result.get() == btnCopiarSeed) {
+                ClipboardContent content = new ClipboardContent();
+                content.putString(seed != null ? seed : "aleatoria");
+                Clipboard.getSystemClipboard().setContent(content);
+                mostrarAlerta(titulo, mensaje); // volver a mostrar menú
             } else {
                 primaryStage.close();
             }
         }
     }
 
+    private void mostrarMenuPrincipal() {
+        Stage menuStage = new Stage();
+        menuStage.setTitle("Aventura del Robot - Menú");
+
+        Label label = new Label("Introduce tu nombre:");
+        TextField nombreField = new TextField();
+
+        Button btnJugar = new Button("Jugar");
+        Button btnLeaderboard = new Button("Leaderboard");
+
+        btnJugar.setOnAction(e -> {
+            String nombre = nombreField.getText().trim();
+            if (!nombre.isEmpty()) {
+                Game nuevoJuego = new Game(nombre);
+                try {
+                    nuevoJuego.start(new Stage());
+                    menuStage.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        btnLeaderboard.setOnAction(e -> Leaderboard.mostrarLeaderboard());
+
+        VBox layout = new VBox(10, label, nombreField, btnJugar, btnLeaderboard);
+        layout.setStyle("-fx-padding: 20;");
+        menuStage.setScene(new Scene(layout, 300, 200));
+        menuStage.show();
+
+        primaryStage.close();
+    }
 
     private void initMapa() {
         generarMapaAleatorio();
@@ -180,10 +192,9 @@ public class Game extends Application {
             visitado[paso[0]][paso[1]] = true;
         }
 
-        Random rand = new Random();
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
-                if (mapa[i][j] == '1' && rand.nextDouble() < 0.25) {
+                if (mapa[i][j] == '1' && random.nextDouble() < 0.25) {
                     mapa[i][j] = '0';
                 }
             }
@@ -217,9 +228,8 @@ public class Game extends Application {
     }
 
     private void shuffleArray(int[][] array) {
-        Random rand = new Random();
         for (int i = array.length - 1; i > 0; i--) {
-            int j = rand.nextInt(i + 1);
+            int j = random.nextInt(i + 1);
             int[] temp = array[i];
             array[i] = array[j];
             array[j] = temp;
@@ -227,17 +237,15 @@ public class Game extends Application {
     }
 
     private void colocarBombas() {
-        Random rand = new Random();
         int bombasPuestas = 0;
-
         Set<String> caminoSeguroSet = new HashSet<>();
         for (int[] paso : caminoSeguro) {
             caminoSeguroSet.add(paso[0] + "," + paso[1]);
         }
 
         while (bombasPuestas < NUM_BOMBAS) {
-            int y = rand.nextInt(filas);
-            int x = rand.nextInt(columnas);
+            int y = random.nextInt(filas);
+            int x = random.nextInt(columnas);
 
             if (mapa[y][x] == '0' &&
                     !caminoSeguroSet.contains(y + "," + x) &&

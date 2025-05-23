@@ -10,6 +10,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.util.UUID;
+
 public class Main extends Application {
 
     @Override
@@ -24,6 +26,10 @@ public class Main extends Application {
         TextField nombreField = new TextField();
         nombreField.setPromptText("Tu nombre aquí...");
 
+        Label seedLabel = new Label("Seed (opcional):");
+        TextField seedField = new TextField();
+        seedField.setPromptText("Ej: mapa123");
+
         Button btnJugar = new Button("🎮 Jugar");
         Button btnLeaderboard = new Button("🏆 Leaderboard");
 
@@ -32,8 +38,12 @@ public class Main extends Application {
 
         btnJugar.setOnAction(e -> {
             String nombre = nombreField.getText().trim();
+            String seed = seedField.getText().trim();
             if (!nombre.isEmpty()) {
-                Game game = new Game(nombre);
+                if (seed.isEmpty()) {
+                    seed = generarSeedAleatoria();
+                }
+                Game game = new Game(nombre, seed);
                 try {
                     game.start(new Stage());
                     primaryStage.close();
@@ -48,15 +58,20 @@ public class Main extends Application {
 
         btnLeaderboard.setOnAction(e -> Leaderboard.mostrarLeaderboard());
 
-        VBox layout = new VBox(15, titulo, label, nombreField, btnJugar, btnLeaderboard);
+        VBox layout = new VBox(15, titulo, label, nombreField, seedLabel, seedField, btnJugar, btnLeaderboard);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(25));
         layout.setStyle("-fx-background-color: linear-gradient(to bottom, #ffffff, #cce7ff);");
 
-        Scene scene = new Scene(layout, 350, 280);
+        Scene scene = new Scene(layout, 350, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+    private String generarSeedAleatoria() {
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+    }
+
 
     public static void main(String[] args) {
         launch(args);

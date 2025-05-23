@@ -1,18 +1,20 @@
 package Mapa;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.json.*;
 
 public class Leaderboard {
 
     private static final String JSON_PATH = System.getProperty("user.home") + File.separator + "leaderboard.json";
 
-    public static void guardarResultado(String nombre, String tiempo) {
+    public static void guardarResultado(String nombre, String tiempo, String seed) {
         List<JSONObject> datos = new ArrayList<>();
 
         // Leer archivo existente
@@ -31,6 +33,7 @@ public class Leaderboard {
         entrada.put("nombre", nombre);
         entrada.put("fecha", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         entrada.put("tiempo", tiempo);
+        entrada.put("seed", seed);
         datos.add(entrada);
 
         // Guardar
@@ -50,32 +53,47 @@ public class Leaderboard {
             String contenido = new String(Files.readAllBytes(Paths.get(JSON_PATH)));
             JSONArray jsonArray = new JSONArray(contenido);
 
-            // Convertir JSONArray a List<JSONObject> para poder ordenarlo
             List<JSONObject> lista = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 lista.add(jsonArray.getJSONObject(i));
             }
 
-            // Ordenar por el campo "tiempo" ascendente
             lista.sort(Comparator.comparingDouble(obj -> Double.parseDouble(obj.getString("tiempo"))));
 
-            // Construir el texto
-            StringBuilder sb = new StringBuilder();
+            ListView<String> listView = new ListView<>();
+            Map<String, String> seedMap = new HashMap<>();
+
             for (JSONObject obj : lista) {
-                sb.append(String.format("%s (%s) - %s\n",
+                String line = String.format("%s - %s (%s) - %s",
+                        obj.getString("seed"),
                         obj.getString("nombre"),
                         obj.getString("fecha"),
-                        obj.getString("tiempo")));
+                        obj.getString("tiempo"));
+                listView.getItems().add(line);
+                seedMap.put(line, obj.getString("seed"));
             }
 
-            TextArea textArea = new TextArea(sb.toString());
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
+            Button btnJugarSeed = new Button("Jugar este mapa");
+            btnJugarSeed.setOnAction(event -> {
+                String seleccion = listView.getSelectionModel().getSelectedItem();
+                if (seleccion != null) {
+                    String seed = seedMap.get(seleccion);
+                    Game game = new Game("Jugador", seed);
+                    try {
+                        game.start(new Stage());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+            VBox content = new VBox(10, new Label("🏆 Mejores partidas (haz clic en una y luego en 'Jugar este mapa'):"), listView, btnJugarSeed);
+            content.setPrefSize(500, 400);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Leaderboard");
-            alert.setHeaderText("🏆 Mejores partidas");
-            alert.getDialogPane().setContent(textArea);
+            alert.setHeaderText("Seed - Nombre (Fecha) - Tiempo");
+            alert.getDialogPane().setContent(content);
             alert.showAndWait();
 
         } catch (IOException | JSONException e) {
@@ -83,4 +101,5 @@ public class Leaderboard {
             error.show();
         }
     }
+
 }
