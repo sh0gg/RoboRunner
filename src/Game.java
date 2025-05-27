@@ -47,10 +47,10 @@ public class Game extends Application {
         Scene scene = new Scene(gridpane);
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case A: mover("izq"); break;
-                case D: mover("der"); break;
-                case S: mover("abj"); break;
-                case W: mover("arr"); break;
+                case LEFT, A: mover("izq"); break;
+                case RIGHT, D: mover("der"); break;
+                case DOWN, S: mover("abj"); break;
+                case UP, W: mover("arr"); break;
             }
         });
 
