@@ -17,7 +17,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Aventura del Robot - Menú");
+        mostrarMenuPrincipal();
+    }
+
+    public static void mostrarMenuPrincipal() {
+        Stage stage = new Stage();
+        stage.setTitle("Aventura del Robot - Menú");
 
         // Título estilizado
         Label titulo = new Label("🤖 Aventura del Robot");
@@ -47,7 +52,7 @@ public class Main extends Application {
                 Game game = new Game(nombre, seed);
                 try {
                     game.start(new Stage());
-                    primaryStage.close();
+                    stage.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -65,14 +70,14 @@ public class Main extends Application {
         layout.setStyle("-fx-background-color: linear-gradient(to bottom, #ffffff, #cce7ff);");
 
         Scene scene = new Scene(layout, 350, 300);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setScene(scene);
+        stage.show();
+
     }
 
-    private String generarSeedAleatoria() {
+    private static String generarSeedAleatoria() {
         return UUID.randomUUID().toString().replace("-", "").substring(0, 8);
     }
-
 
     public static void main(String[] args) {
         launch(args);

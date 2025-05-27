@@ -135,7 +135,7 @@ public class Game extends Application {
                     e.printStackTrace();
                 }
             } else if (result.get() == btnMenu) {
-                mostrarMenuPrincipal();
+                Main.mostrarMenuPrincipal();
             } else if (result.get() == btnCopiarSeed) {
                 ClipboardContent content = new ClipboardContent();
                 content.putString(seed != null ? seed : "aleatoria");
@@ -145,39 +145,6 @@ public class Game extends Application {
                 primaryStage.close();
             }
         }
-    }
-
-    private void mostrarMenuPrincipal() {
-        Stage menuStage = new Stage();
-        menuStage.setTitle("Aventura del Robot - Menú");
-
-        Label label = new Label("Introduce tu nombre:");
-        TextField nombreField = new TextField();
-
-        Button btnJugar = new Button("Jugar");
-        Button btnLeaderboard = new Button("Leaderboard");
-
-        btnJugar.setOnAction(e -> {
-            String nombre = nombreField.getText().trim();
-            if (!nombre.isEmpty()) {
-                Game nuevoJuego = new Game(nombre);
-                try {
-                    nuevoJuego.start(new Stage());
-                    menuStage.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        btnLeaderboard.setOnAction(e -> Leaderboard.mostrarLeaderboard());
-
-        VBox layout = new VBox(10, label, nombreField, btnJugar, btnLeaderboard);
-        layout.setStyle("-fx-padding: 20;");
-        menuStage.setScene(new Scene(layout, 300, 200));
-        menuStage.show();
-
-        primaryStage.close();
     }
 
     private void initMapa() {
