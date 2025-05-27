@@ -8,6 +8,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -22,6 +24,7 @@ public class Main extends Application {
 
     public static void mostrarMenuPrincipal(Stage stage) {
         stage.setTitle("Aventura del Robot - Menú");
+        stage.getIcons().add(new Image("file:robot.ico"));
 
         // Título estilizado
         Label titulo = new Label("🤖 Aventura del Robot");
@@ -35,8 +38,15 @@ public class Main extends Application {
         TextField seedField = new TextField();
         seedField.setPromptText("Ej: mapa123");
 
-        Button btnJugar = new Button("🎮 Jugar");
-        Button btnLeaderboard = new Button("🏆 Leaderboard");
+        ImageView iconJugar = new ImageView(new Image("file:assets/mando.png"));
+        iconJugar.setFitWidth(20);
+        iconJugar.setFitHeight(20);
+        Button btnJugar = new Button("Jugar", iconJugar);
+
+        ImageView iconLeaderboard = new ImageView(new Image("file:assets/trofeo.png"));
+        iconLeaderboard.setFitWidth(20);
+        iconLeaderboard.setFitHeight(20);
+        Button btnLeaderboard = new Button("Leaderboard", iconLeaderboard);
 
         btnJugar.setPrefWidth(200);
         btnLeaderboard.setPrefWidth(200);
