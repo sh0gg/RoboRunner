@@ -1,12 +1,26 @@
-import javafx.scene.control.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.json.*;
 
 public class Leaderboard {
 
