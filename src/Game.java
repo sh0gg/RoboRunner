@@ -57,10 +57,18 @@ public class Game extends Application {
         Scene scene = new Scene(gridpane);
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case LEFT, A: mover("izq"); break;
-                case RIGHT, D: mover("der"); break;
-                case DOWN, S: mover("abj"); break;
-                case UP, W: mover("arr"); break;
+                case LEFT, A:
+                    mover("izq");
+                    break;
+                case RIGHT, D:
+                    mover("der");
+                    break;
+                case DOWN, S:
+                    mover("abj");
+                    break;
+                case UP, W:
+                    mover("arr");
+                    break;
             }
         });
 
@@ -76,10 +84,18 @@ public class Game extends Application {
         int nuevaY = robotY;
 
         switch (dir) {
-            case "izq": nuevaX--; break;
-            case "der": nuevaX++; break;
-            case "arr": nuevaY--; break;
-            case "abj": nuevaY++; break;
+            case "izq":
+                nuevaX--;
+                break;
+            case "der":
+                nuevaX++;
+                break;
+            case "arr":
+                nuevaY--;
+                break;
+            case "abj":
+                nuevaY++;
+                break;
         }
 
         if (nuevaY >= 0 && nuevaY < filas && nuevaX >= 0 && nuevaX < columnas && mapa[nuevaY][nuevaX] != '1') {
@@ -135,7 +151,13 @@ public class Game extends Application {
                     e.printStackTrace();
                 }
             } else if (result.get() == btnMenu) {
-                Main.mostrarMenuPrincipal();
+                try {
+                    Main.mostrarMenuPrincipal(new Stage());
+                    primaryStage.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             } else if (result.get() == btnCopiarSeed) {
                 ClipboardContent content = new ClipboardContent();
                 content.putString(seed != null ? seed : "aleatoria");
@@ -184,18 +206,21 @@ public class Game extends Application {
     }
 
     private boolean dfsCrearCaminoUnico(int y, int x) {
-        if (y < 0 || y >= filas || x < 0 || x >= columnas || visitado[y][x]) return false;
+        if (y < 0 || y >= filas || x < 0 || x >= columnas || visitado[y][x])
+            return false;
 
         visitado[y][x] = true;
-        caminoSeguro.add(new int[]{y, x});
+        caminoSeguro.add(new int[] { y, x });
 
-        if (y == filas - 1 && x == columnas - 2) return true;
+        if (y == filas - 1 && x == columnas - 2)
+            return true;
 
-        int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int[][] dirs = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
         shuffleArray(dirs);
 
         for (int[] d : dirs) {
-            if (dfsCrearCaminoUnico(y + d[0], x + d[1])) return true;
+            if (dfsCrearCaminoUnico(y + d[0], x + d[1]))
+                return true;
         }
 
         caminoSeguro.remove(caminoSeguro.size() - 1);

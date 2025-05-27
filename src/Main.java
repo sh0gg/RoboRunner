@@ -17,11 +17,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        mostrarMenuPrincipal();
+        mostrarMenuPrincipal(primaryStage);
     }
 
-    public static void mostrarMenuPrincipal() {
-        Stage stage = new Stage();
+    public static void mostrarMenuPrincipal(Stage stage) {
         stage.setTitle("Aventura del Robot - Menú");
 
         // Título estilizado
