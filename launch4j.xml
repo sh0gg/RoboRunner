@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>dist\RoboRunner.jar</jar>
+  <outfile>dist\RobotRunner.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine>--module-path lib --add-modules javafx.controls</cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl></downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>dist\robot.ico</icon>
+  <classPath>
+    <mainClass>Main</mainClass>
+    <cp>dist/RoboRunner.jar</cp>
+    <cp>dist/lib/javafx.base.jar</cp>
+    <cp>dist/lib/javafx.controls.jar</cp>
+    <cp>dist/lib/javafx.graphics.jar</cp>
+  </classPath>
+  <jre>
+    <path>%JAVA_HOME%;%PATH%</path>
+    <requiresJdk>false</requiresJdk>
+    <requires64Bit>false</requires64Bit>
+    <minVersion>17</minVersion>
+    <initialHeapSize>128</initialHeapSize>
+    <maxHeapSize>512</maxHeapSize>
+  </jre>
+</launch4jConfig>
