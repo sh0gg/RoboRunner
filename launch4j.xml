@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>dist\RoboRunner.jar</jar>
+  <outfile>dist\RobotRunner.exe</outfile>
+  <icon>dist\robot.ico</icon>
+  <classPath>
+    <mainClass>Main</mainClass>
+    <cp>dist\RoboRunner.jar</cp>
+  </classPath>
+  <jre>
+    <path>runtime</path>
+    <bundledJre64Bit>true</bundledJre64Bit>
+    <requiresJdk>true</requiresJdk>
+    <requires64Bit>true</requires64Bit>
+    <minVersion>17</minVersion>
+  </jre>
+</launch4jConfig>

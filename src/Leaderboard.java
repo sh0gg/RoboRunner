@@ -102,6 +102,7 @@ public class Leaderboard {
                     Game game = new Game("Jugador", seed);
                     try {
                         game.start(new Stage());
+                        ((Stage) btnJugarSeed.getScene().getWindow()).close(); // ⬅️ CIERRA EL LEADERBOARD
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }

@@ -30,6 +30,7 @@
         "nombre": "Probrando"
     },
     {
+<<<<<<< HEAD
         "fecha": "2025-05-27 14:20:40",
         "seed": "1490082f",
         "tiempo": "06.952",
@@ -80,5 +81,71 @@
         "fecha": "2025-05-27 14:29:33",
         "tiempo": "06.386",
         "nombre": "szdfsa"
+=======
+        "fecha": "2025-05-27 20:48:43",
+        "seed": "08c1a320",
+        "tiempo": "04.578",
+        "nombre": "Xarr"
+    },
+    {
+        "fecha": "2025-05-27 20:48:49",
+        "seed": "08c1a320",
+        "tiempo": "03.720",
+        "nombre": "Xarr"
+    },
+    {
+        "fecha": "2025-05-27 21:01:32",
+        "seed": "a7044534",
+        "tiempo": "06.387",
+        "nombre": "asdf"
+    },
+    {
+        "fecha": "2025-05-27 21:08:13",
+        "seed": "478a91b4",
+        "tiempo": "05.786",
+        "nombre": "Jugador"
+    },
+    {
+        "fecha": "2025-05-27 21:48:10",
+        "seed": "9807b868",
+        "tiempo": "04.836",
+        "nombre": "prueba"
+    },
+    {
+        "fecha": "2025-05-27 22:51:42",
+        "seed": "fda0a036",
+        "tiempo": "09.953",
+        "nombre": "asdf"
+    },
+    {
+        "fecha": "2025-05-27 22:52:00",
+        "seed": "8ba22988",
+        "tiempo": "05.738",
+        "nombre": "asdf"
+    },
+    {
+        "fecha": "2025-05-27 23:07:20",
+        "seed": "872572a0",
+        "tiempo": "07.100",
+        "nombre": "asd"
+    },
+    {
+        "fecha": "2025-05-27 23:07:35",
+        "seed": "85d95c9b",
+        "tiempo": "05.429",
+        "nombre": "asd"
+    },
+    {
+        "fecha": "2025-05-27 23:07:38",
+        "seed": "d8801824",
+        "tiempo": "02.178",
+        "nombre": "asd"
+    },
+    {
+        "fecha": "2025-05-27 23:07:47",
+        "seed": "87425eb8",
+        "tiempo": "07.519",
+        "nombre": "asd"
+>>>>>>> fb6870da143dedfec03089d5c31632c2ab52c244
     }
 ]
