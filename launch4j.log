@@ -66,3 +66,21 @@ Launcher:	C:\Users\xarro\compiladores\jdk-23\bin\javaw.exe
 Launcher args:	--module-path ".\lib\openjfx-24.0.1_windows-x64_bin-sdk\javafx-sdk-24.0.1\lib" --add-modules javafx.controls,javafx.fxml -jar "C:\Users\xarro\RoboRunner\RoboRunner\RobotRunner.exe"
 Args length:	180/32768 chars
 Exit code:	0
+
+
+Version:	3.50
+CmdLine:	Y:\RoboRunner\RoboRunner\RobotRunner.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	Y:\RoboRunner\RoboRunner\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	1.017.000
+Java max ver:	
+JRE paths:	runtime
+Check launcher:	Y:\RoboRunner\RoboRunner\runtime\bin\javaw.exe (OK)
+Version string: 1.017.000_012 / 64-Bit (OK)
+Launcher:	Y:\RoboRunner\RoboRunner\runtime\bin\javaw.exe
+Launcher args:	--module-path lib --add-modules javafx.controls,javafx.graphics,javafx.base,javafx.fxml -cp RoboRunner.jar;lib\json-20250517.jar -jar "Y:\RoboRunner\RoboRunner\RobotRunner.exe"
+Args length:	176/32768 chars
+Exit code:	0
