@@ -1,59 +1,72 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: ⚙️ CONFIGURACIÓN
+:: ----------------------------
+:: CONFIGURACIÓN
+:: ----------------------------
 
 set "JAVA17=C:\Program Files\Java\jdk-17"
-set "LAUNCH4J=C:\Program Files (x86)\Launch4j\launch4j.exe"
-set "CONFIG=launch4j.xml"
-set "DISTFOLDER=dist"
-set "ZIPNAME=RoboRunner_v0.81_sh0gg.zip"
+set "JAVA_FX_SDK=E:\Descargas\javafx-sdk-17.0.15"
+set "DIST=dist"
+set "RUNTIME=runtime"
+set "ZIPNAME=RoboRunner_FullRelease.zip"
 
-:: 🧹 LIMPIEZA
-echo 🔄 Limpiando carpeta %DISTFOLDER%...
-rmdir /s /q %DISTFOLDER% 2>nul
-mkdir %DISTFOLDER%\lib
-mkdir %DISTFOLDER%\assets
+:: ----------------------------
+:: LIMPIEZA Y PREPARACIÓN
+:: ----------------------------
 
-:: 🛠 COMPILACIÓN
-echo 🛠 Compilando código con Java 17...
+echo 🔄 Limpiando carpetas...
+rmdir /s /q %DIST% 2>nul
+rmdir /s /q %RUNTIME% 2>nul
+mkdir %DIST%\lib
+mkdir %DIST%\assets
+
+:: ----------------------------
+:: COMPILACIÓN
+:: ----------------------------
+
+echo 🛠 Compilando con Java 17...
 "%JAVA17%\bin\javac.exe" -encoding UTF-8 -d out -cp "lib/*" src\*.java
 
-:: 📦 CREACIÓN DEL JAR
-echo 📦 Generando JAR con clase principal...
-"%JAVA17%\bin\jar.exe" --create --file %DISTFOLDER%\RoboRunner.jar --main-class=Main -C out .
+:: ----------------------------
+:: GENERACIÓN JAR
+:: ----------------------------
 
-:: 🧳 COPIA DE RECURSOS
-echo 📁 Copiando recursos y librerías...
-xcopy /E /I /Y assets %DISTFOLDER%\assets >nul
-copy robot.ico %DISTFOLDER%\robot.ico >nul
-copy lib\javafx.base.jar %DISTFOLDER%\lib\
-copy lib\javafx.controls.jar %DISTFOLDER%\lib\
-copy lib\javafx.graphics.jar %DISTFOLDER%\lib\
+echo 📦 Empaquetando JAR principal...
+"%JAVA17%\bin\jar.exe" --create --file %DIST%\RoboRunner.jar --main-class=Main -C out .
 
-:: 📝 CREAR README
-echo 📝 Generando README...
-(
-echo RoboRunner v0.81 - por sh0gg
-echo ---------------------------
-echo Este juego requiere tener instalado Java 17 para funcionar correctamente.
-echo Puedes descargarlo desde:
-echo https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
+:: ----------------------------
+:: COPIA DE RECURSOS Y LIBRERÍAS
+:: ----------------------------
+
+echo 📁 Copiando recursos...
+xcopy /E /I /Y assets %DIST%\assets >nul
+copy robot.ico %DIST%\robot.ico >nul
+
+echo 📚 Copiando librerías JavaFX...
+xcopy /Y "%JAVA_FX_SDK%\lib\*.jar" %DIST%\lib\ >nul
+
+:: ----------------------------
+:: GENERACIÓN RUNTIME CON JLINK
+:: ----------------------------
+
+echo 🚀 Generando runtime personalizado con jlink...
+"%JAVA17%\bin\jlink.exe" --module-path "%JAVA17%\jmods;%JAVA_FX_SDK%\lib" --add-modules java.base,java.desktop,javafx.controls,javafx.fxml,javafx.graphics,javafx.base --output %RUNTIME% --strip-debug --compress 2 --no-header-files --no-man-pages
+
+echo 📋 Copiando DLLs nativas a runtime\bin...
+xcopy /Y "%JAVA_FX_SDK%\bin\*.dll" %RUNTIME%\bin\ >nul
+
+:: ----------------------------
+:: CREACIÓN ZIP FINAL
+:: ----------------------------
+
+echo 🗜 Empaquetando todo en %ZIPNAME%...
+powershell -Command "Compress-Archive -Path '%DIST%\*','%RUNTIME%\*' -DestinationPath '%ZIPNAME%' -Force"
+
+:: ----------------------------
+:: FIN
+:: ----------------------------
+
 echo.
-echo Para jugar, simplemente ejecuta el archivo: RobotRunner.exe
-echo.
-echo ¡Gracias por jugar!
-) > %DISTFOLDER%\README.txt
-
-:: 🚀 EJECUTANDO LAUNCH4J
-echo 🚀 Ejecutando Launch4j...
-"%LAUNCH4J%" %CONFIG%
-
-:: 🗜️ CREAR ZIP
-echo 🗜️ Empaquetando build en %ZIPNAME%...
-powershell -Command "Compress-Archive -Path '%DISTFOLDER%\*' -DestinationPath '%ZIPNAME%'"
-
-:: ✅ FIN
-echo.
-echo ✅ Build completado: %ZIPNAME% listo para distribuir.
+echo ✅ Build completado. Archivo listo: %ZIPNAME%
 pause

@@ -1,0 +1,1 @@
+..\runtime\bin\java.exe --module-path .\lib\ --add-modules javafx.controls,javafx.graphics,javafx.base,javafx.fxml -cp .\RoboRunner.jar Main
